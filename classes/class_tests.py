@@ -10,6 +10,7 @@ medium_map = [
     [0, 1, 0, 0, 0]
 ]
 
+
 class BoardTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -72,10 +73,8 @@ class BoardTestCase(unittest.TestCase):
         for row in range(len(medium_map)):
             for col in range(len(medium_map[0])):
                 if medium_map[row][col] == 1:
-                    print((row, col))
                     board.set_cost(row, col, 100.0)
         result = board.find_path()
-        print(result['path'])
         self.assertEqual(result['steps'], 11)
 
 

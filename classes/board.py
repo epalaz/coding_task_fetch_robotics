@@ -119,8 +119,6 @@ class Board:
 
             visited_nodes[current_index] = current_node
 
-        print("Goal row and col " + str(self.goal_row) + " & " + str(self.goal_col))
-        print(path_costs[self.goal_row * self.col + self.goal_col])
         path_to_goal = paths[self.goal_row * self.col + self.goal_col]
         steps = []
         for step in path_to_goal:
