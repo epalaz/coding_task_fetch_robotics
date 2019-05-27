@@ -4,10 +4,10 @@ from classes.exceptions import BoardSizeException, BoardIndexOutOfBoundsExceptio
 
 medium_map = [
     [0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 0],
     [0, 1, 0, 1, 0],
     [0, 1, 0, 0, 0],
-    [0, 1, 1, 1, 0]
+    [0, 1, 0, 0, 0]
 ]
 
 class BoardTestCase(unittest.TestCase):

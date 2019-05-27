@@ -21,7 +21,6 @@ class Board:
         self.start_col = None
         self.goal_row = None
         self.goal_col = None
-        self.paths = None
 
     def set_start(self, start_row, start_col):
         if start_row < 0 or start_row >= self.row or start_col < 0 or start_col >= self.col:
@@ -64,63 +63,64 @@ class Board:
             neighbor_nodes = []
 
             if current_node.row >= 1:
-                if visited_nodes.get((current_node.row - 1) * self.col + current_node.col, None) is None:
-                    neighbor_node = grid_board[current_node.row - 1][current_node.col]
 
-                    new_cost = path_costs[current_index] + neighbor_node.cost
-                    old_cost = path_costs.get(current_index - self.col, None)
-                    if old_cost is None or new_cost < old_cost:
-                        path_costs[current_index - self.col] = new_cost
-                        new_path = paths[current_index].copy()
-                        new_path.append(self.board[current_node.row - 1][current_node.col])
-                        paths[current_index - self.col] = new_path
-                    neighbor_nodes.append(neighbor_node)
+                neighbor_node = grid_board[current_node.row - 1][current_node.col]
+
+                new_cost = path_costs[current_index] + neighbor_node.cost
+                old_cost = path_costs.get(current_index - self.col, None)
+                if old_cost is None or new_cost < old_cost:
+                    path_costs[current_index - self.col] = new_cost
+                    new_path = paths[current_index].copy()
+                    new_path.append(self.board[current_node.row - 1][current_node.col])
+                    paths[current_index - self.col] = new_path
+
+                neighbor_nodes.append(neighbor_node)
+
             if current_node.col >= 1:
-                if visited_nodes.get(current_node.row * self.col + (current_node.col - 1), None) is None:
-                    neighbor_node = grid_board[current_node.row][current_node.col - 1]
+                neighbor_node = grid_board[current_node.row][current_node.col - 1]
 
-                    new_cost = path_costs[current_index] + neighbor_node.cost
-                    old_cost = path_costs.get(current_index - 1, None)
-                    if old_cost is None or new_cost < old_cost:
-                        path_costs[current_index - 1] = new_cost
-                        new_path = paths[current_index].copy()
-                        new_path.append(self.board[current_node.row][current_node.col - 1])
-                        paths[current_index - 1] = new_path
-                    neighbor_nodes.append(neighbor_node)
-            if current_node.row < self.row - 1:
-                if visited_nodes.get((current_node.row + 1) * self.col + current_node.col, None) is None:
-                    neighbor_node = grid_board[current_node.row + 1][current_node.col]
+                new_cost = path_costs[current_index] + neighbor_node.cost
+                old_cost = path_costs.get(current_index - 1, None)
+                if old_cost is None or new_cost < old_cost:
+                    path_costs[current_index - 1] = new_cost
+                    new_path = paths[current_index].copy()
+                    new_path.append(self.board[current_node.row][current_node.col - 1])
+                    paths[current_index - 1] = new_path
 
-                    new_cost = path_costs[current_index] + neighbor_node.cost
-                    old_cost = path_costs.get(current_index + self.col, None)
-                    if old_cost is None or new_cost < old_cost:
-                        path_costs[current_index + self.col] = new_cost
-                        new_path = paths[current_index].copy()
-                        new_path.append(self.board[current_node.row + 1][current_node.col])
-                        paths[current_index + self.col] = new_path
+                neighbor_nodes.append(neighbor_node)
+            if current_node.row < (self.row - 1):
+                neighbor_node = grid_board[current_node.row + 1][current_node.col]
 
-                    neighbor_nodes.append(neighbor_node)
-            if current_node.col < self.col - 1:
-                if visited_nodes.get(current_node.row * self.col + (current_node.col + 1), None) is None:
-                    neighbor_node = grid_board[current_node.row][current_node.col + 1]
+                new_cost = path_costs[current_index] + neighbor_node.cost
+                old_cost = path_costs.get(current_index + self.col, None)
+                if old_cost is None or new_cost < old_cost:
+                    path_costs[current_index + self.col] = new_cost
+                    new_path = paths[current_index].copy()
+                    new_path.append(self.board[current_node.row + 1][current_node.col])
+                    paths[current_index + self.col] = new_path
 
-                    new_cost = path_costs[current_index] + neighbor_node.cost
-                    old_cost = path_costs.get(current_index + 1, None)
-                    if old_cost is None or new_cost < old_cost:
-                        path_costs[current_index + 1] = new_cost
-                        new_path = paths[current_index].copy()
-                        new_path.append(self.board[current_node.row][current_node.col + 1])
-                        paths[current_index + 1] = new_path
-                    neighbor_nodes.append(neighbor_node)
+                neighbor_nodes.append(neighbor_node)
+            if current_node.col < (self.col - 1):
 
-            neighbor_nodes.sort(key=sort_node, reverse=True)
+                neighbor_node = grid_board[current_node.row][current_node.col + 1]
+
+                new_cost = path_costs[current_index] + neighbor_node.cost
+                old_cost = path_costs.get(current_index + 1, None)
+                if old_cost is None or new_cost < old_cost:
+                    path_costs[current_index + 1] = new_cost
+                    new_path = paths[current_index].copy()
+                    new_path.append(self.board[current_node.row][current_node.col + 1])
+                    paths[current_index + 1] = new_path
+                neighbor_nodes.append(neighbor_node)
 
             for neighbor in neighbor_nodes:
-                if neighbor not in nodes_to_check:
+                if visited_nodes.get(neighbor.row * self.col + neighbor.col, None) is None:
                     nodes_to_check.append(neighbor)
 
             visited_nodes[current_index] = current_node
 
+        print("Goal row and col " + str(self.goal_row) + " & " + str(self.goal_col))
+        print(path_costs[self.goal_row * self.col + self.goal_col])
         path_to_goal = paths[self.goal_row * self.col + self.goal_col]
         steps = []
         for step in path_to_goal:
