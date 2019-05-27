@@ -11,4 +11,4 @@ app.add_url_rule('/api/costs/', view_func=views.create_heuristic_cost, methods=[
 app.add_url_rule('/api/paths/', view_func=views.find_path, methods=['GET'])
 
 if __name__ == '__main__':
-    app.run(port=3000, host='localhost', debug=False)
+    app.run(port=3000, host='0.0.0.0', debug=False)

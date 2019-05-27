@@ -77,7 +77,7 @@ def create_goal():
         return jsonify({'error': 'Both \'col\' and \'row\' indexes should be smaller than row and column of current '
                                  'board!'}), 400
 
-    board.set_goal(start_row=i, start_col=j)
+    board.set_goal(goal_row=i, goal_col=j)
 
     return jsonify({'i': i, 'j': j}), 201
 
@@ -91,12 +91,10 @@ def create_heuristic_cost():
     body = request.json
     costs = body.get('costs', None)
 
-    print(type(costs))
-
     if costs is None:
         return jsonify({'error': 'Either costs field is missing!'}), 400
 
-    if isinstance(costs, list):
+    if not isinstance(costs, list):
         return jsonify({'error': 'Costs should be a dict of i, j and cost fields!'}), 400
 
     if len(costs) == 0:
@@ -140,6 +138,14 @@ def create_heuristic_cost():
 
 def find_path():
     global board
+
+    if board is None:
+        return jsonify({'error': 'Board doesn\'t exist! Please create a board by using \'/api/maps/\' endpoint!'}), 400
+
+    if board.start_col is None or board.start_row is None:
+        return jsonify({'error': 'Starting point doesn\'t exist!'}), 400
+    if board.goal_col is None or board.goal_row is None:
+        return jsonify({'error': 'Goal point doesn\'t exist!'}), 400
 
     output = board.find_path()
 

@@ -66,6 +66,14 @@ class BoardTestCase(unittest.TestCase):
         self.assertEqual(path['path'][0]['i'], 3)
         self.assertEqual(path['path'][0]['j'], 8)
 
+    def test_find_path_small(self):
+        board = Board(3, 3)
+        board.set_start(0, 0)
+        board.set_goal(2, 2)
+        board.set_cost(0, 1, 100.0)
+        result = board.find_path()
+        self.assertEqual(result['steps'], 5)
+
     def test_find_path_medium(self):
         board = Board(5, 5)
         board.set_start(0, 0)

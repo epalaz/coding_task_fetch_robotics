@@ -1,5 +1,5 @@
 from classes.exceptions import BoardSizeException, BoardIndexOutOfBoundsException
-
+from utils import get_minimum_cost_elem
 
 class Board:
 
@@ -58,12 +58,11 @@ class Board:
         nodes_to_check.append(starting_node)
 
         while len(nodes_to_check) != 0:
-            current_node = nodes_to_check.pop()
+            current_node = get_minimum_cost_elem(nodes_to_check)
             current_index = current_node.row * self.col + current_node.col
             neighbor_nodes = []
 
             if current_node.row >= 1:
-
                 neighbor_node = grid_board[current_node.row - 1][current_node.col]
 
                 new_cost = path_costs[current_index] + neighbor_node.cost
@@ -101,7 +100,6 @@ class Board:
 
                 neighbor_nodes.append(neighbor_node)
             if current_node.col < (self.col - 1):
-
                 neighbor_node = grid_board[current_node.row][current_node.col + 1]
 
                 new_cost = path_costs[current_index] + neighbor_node.cost
@@ -114,7 +112,7 @@ class Board:
                 neighbor_nodes.append(neighbor_node)
 
             for neighbor in neighbor_nodes:
-                if visited_nodes.get(neighbor.row * self.col + neighbor.col, None) is None:
+                if visited_nodes.get(neighbor.row * self.col + neighbor.col, None) is None and nodes_to_check.count(neighbor) == 0:
                     nodes_to_check.append(neighbor)
 
             visited_nodes[current_index] = current_node
