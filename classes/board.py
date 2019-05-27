@@ -36,8 +36,9 @@ class Board:
         self.goal_col = goal_col
 
     def set_cost(self, row, col, cost):
-        if row < 0 or col >= self.row or col < 0 or col >= self.col:
+        if row < 0 or row >= self.row or col < 0 or col >= self.col:
             raise BoardIndexOutOfBoundsException('Invalid index for row or column!')
+
         node = self.board[row][col]
         node.cost = cost
 
@@ -45,12 +46,15 @@ class Board:
         # lets use Djkstra's algorithm while keeping track of all the possible routes
         grid_board = self.board
 
+        if self.start_row == self.goal_row and self.start_col == self.goal_col:
+            return {'steps': 1, 'path': [{'i': self.start_row, 'j': self.start_col}]}
+
         nodes_to_check = []
         visited_nodes = {}
 
         starting_node = grid_board[self.start_row][self.start_col]
 
-        path_costs = {self.start_row * self.col + self.start_col: 0}
+        path_costs = {self.start_row * self.col + self.start_col: 1.0}
         paths = {self.start_row * self.col + self.start_col: [starting_node]}
         nodes_to_check.append(starting_node)
 
@@ -94,6 +98,7 @@ class Board:
                         new_path = paths[current_index].copy()
                         new_path.append(self.board[current_node.row + 1][current_node.col])
                         paths[current_index + self.col] = new_path
+
                     neighbor_nodes.append(neighbor_node)
             if current_node.col < self.col - 1:
                 if visited_nodes.get(current_node.row * self.col + (current_node.col + 1), None) is None:
@@ -111,7 +116,8 @@ class Board:
             neighbor_nodes.sort(key=sort_node, reverse=True)
 
             for neighbor in neighbor_nodes:
-                nodes_to_check.append(neighbor)
+                if neighbor not in nodes_to_check:
+                    nodes_to_check.append(neighbor)
 
             visited_nodes[current_index] = current_node
 
